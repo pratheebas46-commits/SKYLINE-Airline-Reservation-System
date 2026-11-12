@@ -1,0 +1,6 @@
+{
+  "name": "SKYLINE RESERVATION BOOKING SYSTEM",
+  "description": "SKYLINE RESERVATION BOOKING SYSTEM - Commercial Flight Search, multi-flight daily schedules per airline, 7-day fare carousel, departure time slots, online seat selection, concessions, and instant e-ticketing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

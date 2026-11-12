@@ -1,0 +1,110 @@
+# ==============================================================================
+# SAMPLE / DEMO DATASET FOR OFFLINE ML TRAIN RECOMMENDATION SYSTEM
+# Academic MCA Major Project - Train Journey & Passenger Preference Data
+# Identifies optimal trains based on fare, duration, departure time, and stops.
+# ==============================================================================
+train_id,train_name,source,destination,departure_hour,arrival_hour,duration_hours,fare,train_type,available_class,num_stops,user_preference,is_recommended,recommendation_reason
+12952,Mumbai Tejas Rajdhani,DEL,BOM,16,8,15.5,2850,Rajdhani,2A,6,fast,1,Recommended because of shorter journey time
+12954,August Kranti Rajdhani,DEL,BOM,17,10,17.0,2650,Rajdhani,3A,11,fast,1,Recommended because of shorter journey time
+12910,Hazrat Nizamuddin Garib Rath,DEL,BOM,15,8,16.5,1080,Garib Rath,3A,7,budget,1,Recommended because of lower fare
+12138,Punjab Mail Express,DEL,BOM,5,7,26.0,840,Mail Express,SL,34,budget,0,Higher journey duration and multiple stops
+12472,Swaraj Superfast Express,DEL,BOM,21,16,19.0,1620,Superfast,3A,15,evening,1,Recommended because it matches your preferred travel time
+22222,CSMT Rajdhani Express,DEL,BOM,16,11,18.5,2740,Rajdhani,2A,7,fast,1,Recommended because of shorter journey time
+12002,Bhopal Shatabdi Express,DEL,BOM,6,14,8.0,1450,Shatabdi,CC,5,morning,1,Recommended because it matches your preferred travel time
+20902,Vande Bharat Express,BOM,AMD,6,11,5.2,1320,Vande Bharat,CC,4,fast,1,Recommended because of shorter journey time
+12010,Shatabdi Express,BOM,AMD,14,20,6.2,1100,Shatabdi,CC,6,afternoon,1,Recommended because it matches your preferred travel time
+12933,Karnavati Express,BOM,AMD,13,21,7.5,650,Superfast,2S,10,budget,1,Recommended because of lower fare
+12901,Gujarat Mail,BOM,AMD,22,6,8.5,820,Mail Express,3A,14,evening,1,Recommended because it matches your preferred travel time
+20608,Vande Bharat Express,MAA,BLR,5,10,4.5,960,Vande Bharat,CC,3,fast,1,Recommended because of shorter journey time
+12028,Shatabdi Express,MAA,BLR,6,11,5.0,890,Shatabdi,CC,4,morning,1,Recommended because it matches your preferred travel time
+12639,Brindavan Express,MAA,BLR,7,13,6.0,380,Express,2S,11,budget,1,Recommended because of lower fare
+12607,Lalbagh Express,MAA,BLR,15,21,6.2,410,Superfast,2S,11,afternoon,1,Recommended because of lower fare
+22625,Double Decker Express,MAA,BLR,7,13,5.8,510,Double Decker,CC,8,morning,1,Recommended because it matches your preferred travel time
+22692,Bangalore Rajdhani,DEL,BLR,20,5,33.0,3850,Rajdhani,2A,13,premium,1,Recommended because of shorter journey time
+12650,Karnataka Sampark Kranti,DEL,BLR,6,19,37.0,2150,Superfast,3A,17,budget,1,Recommended because of lower fare
+12628,Karnataka Express,DEL,BLR,21,12,39.0,1890,Superfast,SL,31,budget,0,Longer travel duration with numerous halts
+20662,Vande Bharat Express,BLR,HYD,5,13,8.0,1540,Vande Bharat,CC,4,morning,1,Recommended because it matches your preferred travel time
+12786,Kacheguda Superfast,BLR,HYD,18,5,11.0,760,Superfast,3A,12,evening,1,Recommended because it matches your preferred travel time
+12794,Rayalaseema Express,BLR,HYD,17,7,14.0,520,Express,SL,22,budget,1,Recommended because of lower fare
+12302,Howrah Rajdhani Express,DEL,CCU,16,10,17.5,2920,Rajdhani,2A,6,fast,1,Recommended because of shorter journey time
+12306,Kolkata Rajdhani Express,DEL,CCU,16,12,19.5,2710,Rajdhani,3A,8,fast,1,Recommended because of shorter journey time
+12314,Sealdah Rajdhani Express,DEL,CCU,16,10,17.5,2890,Rajdhani,2A,7,fast,1,Recommended because of shorter journey time
+12324,Howrah Superfast Express,DEL,CCU,7,7,24.0,980,Superfast,SL,16,budget,1,Recommended because of lower fare
+12260,Sealdah Duronto Express,DEL,CCU,19,12,17.0,2580,Duronto,3A,4,fast,1,Recommended because of shorter journey time
+12274,Howrah Duronto Express,DEL,CCU,12,6,18.0,2610,Duronto,3A,5,fast,1,Recommended because of shorter journey time
+22221,CSMT Rajdhani Express,BOM,DEL,16,10,18.0,2740,Rajdhani,2A,7,fast,1,Recommended because of shorter journey time
+12951,Mumbai Rajdhani Express,BOM,DEL,17,8,15.7,2850,Rajdhani,2A,6,fast,1,Recommended because of shorter journey time
+12953,August Kranti Tejas,BOM,DEL,17,10,17.2,2650,Rajdhani,3A,11,fast,1,Recommended because of shorter journey time
+12909,Garib Rath Express,BOM,DEL,17,9,16.5,1080,Garib Rath,3A,7,budget,1,Recommended because of lower fare
+20901,Vande Bharat Express,AMD,BOM,15,20,5.2,1320,Vande Bharat,CC,4,fast,1,Recommended because of shorter journey time
+12009,Shatabdi Express,AMD,BOM,6,12,6.2,1100,Shatabdi,CC,6,morning,1,Recommended because it matches your preferred travel time
+12934,Karnavati Express,AMD,BOM,5,12,7.3,650,Superfast,2S,10,budget,1,Recommended because of lower fare
+20607,Vande Bharat Express,BLR,MAA,6,10,4.5,960,Vande Bharat,CC,3,fast,1,Recommended because of shorter journey time
+12027,Shatabdi Express,BLR,MAA,6,11,5.0,890,Shatabdi,CC,4,morning,1,Recommended because it matches your preferred travel time
+12640,Brindavan Express,BLR,MAA,15,21,6.0,380,Express,2S,11,budget,1,Recommended because of lower fare
+20661,Vande Bharat Express,HYD,BLR,6,14,8.1,1540,Vande Bharat,CC,4,morning,1,Recommended because it matches your preferred travel time
+12785,Bangalore Superfast,HYD,BLR,19,6,11.0,760,Superfast,3A,12,evening,1,Recommended because it matches your preferred travel time
+12301,Howrah Rajdhani Express,CCU,DEL,16,10,17.5,2920,Rajdhani,2A,6,fast,1,Recommended because of shorter journey time
+12313,Sealdah Rajdhani Express,CCU,DEL,16,10,17.5,2890,Rajdhani,2A,7,fast,1,Recommended because of shorter journey time
+12259,Sealdah Duronto Express,CCU,DEL,18,11,17.0,2580,Duronto,3A,4,fast,1,Recommended because of shorter journey time
+12004,Lucknow Shatabdi Express,DEL,LKO,6,12,6.4,1165,Shatabdi,CC,6,morning,1,Recommended because it matches your preferred travel time
+22436,Vande Bharat Express,DEL,VNS,6,14,8.0,1750,Vande Bharat,CC,4,morning,1,Recommended because it matches your preferred travel time
+22435,Vande Bharat Express,VNS,DEL,15,23,8.0,1750,Vande Bharat,CC,4,afternoon,1,Recommended because of shorter journey time
+12011,Kalka Shatabdi Express,DEL,CDG,7,11,3.4,790,Shatabdi,CC,3,morning,1,Recommended because it matches your preferred travel time
+22448,Vande Bharat Express,DEL,CDG,13,16,3.0,1050,Vande Bharat,CC,2,fast,1,Recommended because of shorter journey time
+12956,Jaipur Superfast,BOM,JAI,18,10,15.8,1420,Superfast,3A,14,evening,1,Recommended because it matches your preferred travel time
+12955,Mumbai Superfast,JAI,BOM,17,9,16.0,1420,Superfast,3A,14,evening,1,Recommended because it matches your preferred travel time
+12414,Pooja Superfast Express,JAI,DEL,16,21,5.3,460,Superfast,SL,8,budget,1,Recommended because of lower fare
+12015,Ajmer Shatabdi Express,DEL,JAI,6,10,4.2,850,Shatabdi,CC,4,morning,1,Recommended because it matches your preferred travel time
+20978,Vande Bharat Express,DEL,JAI,18,22,3.9,1120,Vande Bharat,CC,3,fast,1,Recommended because of shorter journey time
+22223,Vande Bharat Express,BOM,PNQ,6,9,3.1,680,Vande Bharat,CC,3,fast,1,Recommended because of shorter journey time
+12124,Deccan Queen Express,PNQ,BOM,7,10,3.2,390,Superfast,CC,4,morning,1,Recommended because of lower fare
+12127,Intercity Express,BOM,PNQ,6,10,3.5,310,Superfast,2S,5,budget,1,Recommended because of lower fare
+12128,Intercity Express,PNQ,BOM,17,21,3.6,310,Superfast,2S,5,budget,1,Recommended because of lower fare
+12051,Jan Shatabdi Express,BOM,MAO,5,14,9.0,590,Jan Shatabdi,2S,9,budget,1,Recommended because of lower fare
+22229,Vande Bharat Express,BOM,MAO,5,13,7.8,1480,Vande Bharat,CC,6,fast,1,Recommended because of shorter journey time
+10103,Mandovi Express,BOM,MAO,7,19,11.8,470,Express,SL,18,budget,0,Higher journey duration and frequent halts
+12137,Punjab Mail,BOM,DEL,19,21,26.0,840,Mail Express,SL,34,budget,0,Long journey time with high number of stops
+11077,Jhelum Express,PNQ,DEL,17,21,28.0,790,Express,SL,38,budget,0,High journey duration and low punctuality score
+12621,Tamil Nadu Express,MAA,DEL,22,6,32.0,1950,Superfast,3A,10,fast,1,Recommended because of shorter journey time
+12615,Grand Trunk Express,MAA,DEL,18,6,36.0,1820,Superfast,3A,36,budget,0,Longer duration compared to premium Rajdhani
+12433,Rajdhani Express,MAA,DEL,6,10,28.0,3640,Rajdhani,2A,8,fast,1,Recommended because of shorter journey time
+12723,Telangana Express,HYD,DEL,6,7,25.0,1880,Superfast,3A,16,budget,1,Recommended because of lower fare
+12437,Secunderabad Rajdhani,HYD,DEL,12,10,22.0,3200,Rajdhani,2A,6,fast,1,Recommended because of shorter journey time
+12007,Mysuru Shatabdi Express,MAA,BLR,6,10,4.8,910,Shatabdi,CC,2,morning,1,Recommended because it matches your preferred travel time
+12008,Mysuru Shatabdi Express,BLR,MAA,16,21,4.9,910,Shatabdi,CC,2,afternoon,1,Recommended because it matches your preferred travel time
+20601,Vande Bharat Express,MAA,CBE,14,20,6.0,1260,Vande Bharat,CC,4,fast,1,Recommended because of shorter journey time
+12675,Kovai Superfast Express,MAA,CBE,6,14,7.8,450,Superfast,CC,10,budget,1,Recommended because of lower fare
+20641,Vande Bharat Express,BLR,CBE,13,19,6.0,1180,Vande Bharat,CC,4,fast,1,Recommended because of shorter journey time
+12678,Ernakulam Intercity,BLR,CBE,6,12,6.5,410,Superfast,2S,8,budget,1,Recommended because of lower fare
+22691,Rajdhani Express,BLR,DEL,20,5,33.0,3850,Rajdhani,2A,13,fast,1,Recommended because of shorter journey time
+12214,Yesvantpur Duronto,DEL,BLR,22,7,32.8,3210,Duronto,3A,6,fast,1,Recommended because of shorter journey time
+12213,Yesvantpur Duronto,BLR,DEL,23,7,32.5,3210,Duronto,3A,6,fast,1,Recommended because of shorter journey time
+12046,Shatabdi Express,CDG,DEL,12,15,3.3,790,Shatabdi,CC,3,afternoon,1,Recommended because it matches your preferred travel time
+12012,Kalka Shatabdi,CDG,DEL,18,21,3.4,790,Shatabdi,CC,3,evening,1,Recommended because it matches your preferred travel time
+12016,Ajmer Shatabdi Express,JAI,DEL,17,21,4.2,850,Shatabdi,CC,4,evening,1,Recommended because it matches your preferred travel time
+20977,Vande Bharat Express,JAI,DEL,6,10,3.9,1120,Vande Bharat,CC,3,fast,1,Recommended because of shorter journey time
+12229,Lucknow Mail,LKO,DEL,22,6,8.2,690,Mail Express,3A,7,evening,1,Recommended because it matches your preferred travel time
+12429,Lucknow AC Superfast,LKO,DEL,23,7,7.8,1050,Superfast,3A,5,evening,1,Recommended because it matches your preferred travel time
+12430,Lucknow AC Superfast,DEL,LKO,23,7,7.8,1050,Superfast,3A,5,evening,1,Recommended because it matches your preferred travel time
+12003,Lucknow Shatabdi Express,LKO,DEL,15,22,6.5,1165,Shatabdi,CC,6,afternoon,1,Recommended because it matches your preferred travel time
+22439,Vande Bharat Express,DEL,SVDK,6,14,8.0,1630,Vande Bharat,CC,4,morning,1,Recommended because it matches your preferred travel time
+22440,Vande Bharat Express,SVDK,DEL,15,23,8.0,1630,Vande Bharat,CC,4,afternoon,1,Recommended because of shorter journey time
+12425,Jammu Rajdhani Express,DEL,JAT,20,5,9.0,2150,Rajdhani,3A,4,evening,1,Recommended because it matches your preferred travel time
+12426,Jammu Rajdhani Express,JAT,DEL,21,6,9.0,2150,Rajdhani,3A,4,evening,1,Recommended because it matches your preferred travel time
+20904,Vande Bharat Express,BOM,SUR,6,12,6.5,1080,Vande Bharat,CC,5,morning,1,Recommended because it matches your preferred travel time
+20903,Vande Bharat Express,SUR,BOM,15,21,6.5,1080,Vande Bharat,CC,5,afternoon,1,Recommended because of shorter journey time
+22225,Vande Bharat Express,BOM,SNSI,6,11,5.3,975,Vande Bharat,CC,4,morning,1,Recommended because it matches your preferred travel time
+22226,Vande Bharat Express,SNSI,BOM,17,22,5.3,975,Vande Bharat,CC,4,evening,1,Recommended because it matches your preferred travel time
+20833,Vande Bharat Express,VSKP,SC,5,13,8.5,1665,Vande Bharat,CC,5,morning,1,Recommended because it matches your preferred travel time
+20834,Vande Bharat Express,SC,VSKP,15,23,8.5,1665,Vande Bharat,CC,5,afternoon,1,Recommended because of shorter journey time
+20835,Vande Bharat Express,ROU,PURI,5,12,7.7,1430,Vande Bharat,CC,6,morning,1,Recommended because it matches your preferred travel time
+20836,Vande Bharat Express,PURI,ROU,13,21,7.7,1430,Vande Bharat,CC,6,afternoon,1,Recommended because of shorter journey time
+12801,Purushottam Express,PURI,DEL,21,4,31.0,1850,Superfast,3A,28,budget,0,Long route with frequent intermediate stations
+12802,Purushottam Express,DEL,PURI,22,5,31.0,1850,Superfast,3A,28,budget,0,Long route with frequent intermediate stations
+22823,Bhubaneswar Rajdhani,BBS,DEL,9,10,24.5,3340,Rajdhani,2A,13,fast,1,Recommended because of shorter journey time
+22824,Bhubaneswar Rajdhani,DEL,BBS,17,17,24.0,3340,Rajdhani,2A,13,fast,1,Recommended because of shorter journey time
+12839,Chennai Mail,HWH,MAS,23,3,27.5,1780,Mail Express,3A,31,budget,0,Long travel duration with numerous halts
+12841,Coromandel Express,HWH,MAS,15,17,25.5,1890,Superfast,3A,15,fast,1,Recommended because of shorter journey time
+12842,Coromandel Express,MAS,HWH,7,9,26.0,1890,Superfast,3A,15,fast,1,Recommended because of shorter journey time
+12875,Neelachal Express,PURI,DEL,11,21,34.0,1720,Superfast,SL,41,budget,0,Extended travel time with higher number of stops

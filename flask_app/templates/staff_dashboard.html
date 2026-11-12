@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Airline Ground Staff Portal{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <span class="badge bg-warning text-dark text-uppercase px-3 py-1 mb-1">Ground Staff Operations</span>
+        <h3 class="fw-bold mb-0">Flight Dispatch & Passenger Manifest</h3>
+    </div>
+    <div class="text-end">
+        <span class="badge bg-light text-dark border p-2 small">Agent: {{ session.get('full_name') }}</span>
+    </div>
+</div>
+
+<!-- Active Flights Operations Table -->
+<div class="card card-custom p-4 mb-4">
+    <h5 class="fw-bold mb-3">Today's Scheduled Flights (Status Management)</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light text-uppercase text-secondary">
+                <tr>
+                    <th>Flight No</th>
+                    <th>Route</th>
+                    <th>Departure Time</th>
+                    <th>Current Gate</th>
+                    <th>Status</th>
+                    <th class="text-end">Quick Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in flights %}
+                <tr>
+                    <td class="font-monospace fw-bold text-primary">{{ f.flight_number }}</td>
+                    <td><strong>{{ f.origin_code }}</strong> ➜ <strong>{{ f.destination_code }}</strong></td>
+                    <td>{{ f.departure_time }} ({{ f.departure_date }})</td>
+                    <td>Gate {{ f.gate }}</td>
+                    <td>
+                        <span class="badge {% if f.status == 'On Time' %}bg-success{% elif f.status == 'Delayed' %}bg-warning text-dark{% elif f.status == 'Cancelled' %}bg-danger{% else %}bg-primary{% endif %}">
+                            {{ f.status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#updateModal-{{ f.flight_id }}">
+                            Update Status / Gate
+                        </button>
+
+                        <!-- Modal for Status Update -->
+                        <div class="modal fade" id="updateModal-{{ f.flight_id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-start">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h5 class="modal-title fs-6">Update Flight {{ f.flight_number }}</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ url_for('update_flight_status', flight_id=f.flight_id) }}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">Flight Operational Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="On Time" {% if f.status == 'On Time' %}selected{% endif %}>On Time</option>
+                                                    <option value="Delayed" {% if f.status == 'Delayed' %}selected{% endif %}>Delayed</option>
+                                                    <option value="Boarding" {% if f.status == 'Boarding' %}selected{% endif %}>Boarding</option>
+                                                    <option value="Departed" {% if f.status == 'Departed' %}selected{% endif %}>Departed</option>
+                                                    <option value="Cancelled" {% if f.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold">Departure Gate</label>
+                                                <input type="text" name="gate" class="form-control" value="{{ f.gate }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Reservations Manifest -->
+<div class="card card-custom p-4">
+    <h5 class="fw-bold mb-3">Passenger Booking Manifest (Recent Reservations)</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light text-uppercase text-secondary">
+                <tr>
+                    <th>PNR</th>
+                    <th>Flight</th>
+                    <th>Passenger</th>
+                    <th>Seat</th>
+                    <th>Cabin</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td class="font-monospace fw-bold text-primary">{{ b.pnr }}</td>
+                    <td>{{ b.flight_number }}</td>
+                    <td>{{ b.passenger_name }}</td>
+                    <td><strong class="text-success">{{ b.seat_code }}</strong></td>
+                    <td>{{ b.cabin_class }}</td>
+                    <td>₹{{ b.total_amount }}</td>
+                    <td>
+                        <span class="badge {% if b.booking_status == 'CONFIRMED' %}bg-success{% elif b.booking_status == 'CHECKED_IN' %}bg-primary{% else %}bg-danger{% endif %}">
+                            {{ b.booking_status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('view_ticket', pnr=b.pnr) }}" class="btn btn-outline-secondary btn-sm rounded-pill">Inspect Ticket</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

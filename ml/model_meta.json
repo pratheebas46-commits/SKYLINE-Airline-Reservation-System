@@ -1,0 +1,23 @@
+{
+  "status": "READY",
+  "algorithm": "Random Forest / Decision Tree Classifier",
+  "library": "Scikit-Learn RandomForestClassifier",
+  "num_training_records": 104,
+  "accuracy": "100.0%",
+  "features_evaluated": [
+    "departure_hour",
+    "duration_hours",
+    "ticket_fare",
+    "number_of_stops",
+    "price_per_hour_efficiency",
+    "user_preference_code"
+  ],
+  "recommendation_reasons": [
+    "Recommended because of lower fare",
+    "Recommended because of shorter journey time",
+    "Recommended because it matches your preferred travel time",
+    "Recommended for high speed and minimal intermediate halts"
+  ],
+  "offline_verified": true,
+  "external_api_dependencies": null
+}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}My Booking History & Tickets{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-book-bookmark text-primary me-2"></i> My Travel Bookings</h3>
+        <p class="text-secondary small mb-0">View your active reservations, reprint tickets, complete web check-in, or process cancellations.</p>
+    </div>
+
+    <!-- PNR Search Form -->
+    <form action="{{ url_for('my_bookings') }}" method="GET" class="d-flex gap-2">
+        <input type="text" name="pnr" class="form-control form-control-sm text-uppercase font-monospace"
+               placeholder="Search by 6-char PNR" value="{{ pnr_query }}" style="width: 200px;">
+        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        {% if pnr_query %}
+            <a href="{{ url_for('my_bookings') }}" class="btn btn-outline-secondary btn-sm rounded-pill">Reset</a>
+        {% endif %}
+    </form>
+</div>
+
+{% if bookings %}
+    <div class="row g-3">
+        {% for b in bookings %}
+        <div class="col-12">
+            <div class="card card-custom p-4 border {% if b.booking_status == 'CANCELLED' %}border-danger bg-light opacity-75{% endif %}">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-3">
+                        <span class="text-muted small d-block">Booking Reference</span>
+                        <h4 class="fw-bold font-monospace text-primary mb-1">{{ b.pnr }}</h4>
+                        <span class="badge {% if b.booking_status == 'CONFIRMED' %}bg-success{% elif b.booking_status == 'CHECKED_IN' %}bg-primary{% else %}bg-danger{% endif %} text-uppercase" style="font-size: 0.65rem;">
+                            {{ b.booking_status }}
+                        </span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5 class="fw-bold mb-0">{{ b.origin_code }} ➜ {{ b.destination_code }}</h5>
+                        <span class="text-secondary small d-block">Flight {{ b.flight_number }} &bull; Seat {{ b.seat_code }} ({{ b.cabin_class }})</span>
+                        <span class="text-muted small">Date: {{ b.travel_date }} (Dep: {{ b.departure_time }})</span>
+                    </div>
+
+                    <div class="col-md-2">
+                        <span class="text-muted small d-block">Passenger</span>
+                        <strong class="text-dark small d-block">{{ b.passenger_name }}</strong>
+                        <span class="text-success fw-bold small">₹{{ b.total_amount }}</span>
+                    </div>
+
+                    <div class="col-md-3 text-md-end d-flex flex-wrap gap-2 justify-content-md-end">
+                        <a href="{{ url_for('view_ticket', pnr=b.pnr) }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                            <i class="fa-solid fa-ticket me-1"></i> View Ticket
+                        </a>
+
+                        {% if b.booking_status == 'CONFIRMED' %}
+                            <a href="{{ url_for('web_checkin') }}" class="btn btn-outline-success btn-sm rounded-pill">
+                                <i class="fa-solid fa-check me-1"></i> Check-In
+                            </a>
+                            <!-- Cancellation Button triggering Modal -->
+                            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ b.pnr }}">
+                                Cancel
+                            </button>
+
+                            <!-- Cancel Confirmation Modal -->
+                            <div class="modal fade" id="cancelModal-{{ b.pnr }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title fs-6"><i class="fa-solid fa-triangle-exclamation me-2"></i> Cancel Booking {{ b.pnr }}</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form action="{{ url_for('cancel_booking', pnr=b.pnr) }}" method="POST">
+                                            <div class="modal-body text-start">
+                                                <p class="small text-secondary">
+                                                    Are you sure you want to cancel flight <strong>{{ b.flight_number }}</strong> on <strong>{{ b.travel_date }}</strong> for seat <strong>{{ b.seat_code }}</strong>?
+                                                </p>
+                                                <div class="p-3 bg-light rounded-3 border small mb-3">
+                                                    <div class="d-flex justify-content-between mb-1">
+                                                        <span>Original Fare:</span>
+                                                        <strong>₹{{ b.total_amount }}</strong>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mb-1 text-danger">
+                                                        <span>Cancellation Fee (20%):</span>
+                                                        <strong>-₹{{ (b.total_amount * 0.20)|round(0)|int }}</strong>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between border-top pt-1 text-success fw-bold">
+                                                        <span>Refund Payable to {{ b.payment_method }}:</span>
+                                                        <span>₹{{ (b.total_amount * 0.80)|round(0)|int }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-semibold">Reason for Cancellation</label>
+                                                    <input type="text" name="reason" class="form-control form-control-sm" required placeholder="Change in schedule">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Keep Booking</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Confirm Cancellation & Process Refund</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% elif b.booking_status == 'CHECKED_IN' %}
+                            <a href="{{ url_for('boarding_pass', pnr=b.pnr) }}" class="btn btn-success btn-sm rounded-pill">
+                                <i class="fa-solid fa-qrcode me-1"></i> Boarding Pass
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card card-custom p-5 text-center">
+        <i class="fa-regular fa-folder-open fa-3x text-muted mb-3"></i>
+        <h5 class="fw-bold">No Bookings Found</h5>
+        <p class="text-secondary small">You haven't made any flight reservations yet or no records match your search filter.</p>
+        <div class="mt-2">
+            <a href="{{ url_for('index') }}" class="btn btn-primary rounded-pill px-4">Book a Flight Now</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

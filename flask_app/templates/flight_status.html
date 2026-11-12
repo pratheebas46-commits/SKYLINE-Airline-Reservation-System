@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Commercial Flight Status Board{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-clock text-primary me-2"></i> Real-Time Flight Status</h3>
+        <p class="text-secondary small mb-0">Track live scheduled departures, delays, gate changes, and operational statuses.</p>
+    </div>
+    <span class="badge bg-light text-dark border p-2 small">
+        <i class="fa-solid fa-satellite-dish text-success me-1"></i> Live Schedule Board
+    </span>
+</div>
+
+<div class="card card-custom p-3 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small text-uppercase text-secondary">
+                <tr>
+                    <th>Flight</th>
+                    <th>Airline</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Terminal / Gate</th>
+                    <th>Current Status</th>
+                </tr>
+            </thead>
+            <tbody class="small">
+                {% for f in flights %}
+                <tr>
+                    <td class="font-monospace fw-bold text-primary">{{ f.flight_number }}</td>
+                    <td class="fw-semibold">{{ f.airline_name }}</td>
+                    <td><strong>{{ f.origin_code }}</strong> ➜ <strong>{{ f.destination_code }}</strong></td>
+                    <td class="text-muted">{{ f.departure_date }}</td>
+                    <td class="fw-bold">{{ f.departure_time }}</td>
+                    <td class="text-muted">{{ f.arrival_time }}</td>
+                    <td>T: {{ f.terminal }} | Gate {{ f.gate }}</td>
+                    <td>
+                        <span class="badge {% if f.status == 'On Time' %}bg-success{% elif f.status == 'Delayed' %}bg-warning text-dark{% elif f.status == 'Cancelled' %}bg-danger{% else %}bg-primary{% endif %} px-2.5 py-1.5">
+                            {{ f.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

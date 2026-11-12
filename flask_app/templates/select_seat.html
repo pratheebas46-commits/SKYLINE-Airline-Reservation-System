@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}Interactive Seat Selection - {{ flight.flight_number }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Flight Summary Bar -->
+    <div class="col-12">
+        <div class="card card-custom p-3 bg-white border">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <h5 class="fw-bold mb-0 text-primary">
+                        <i class="fa-solid fa-plane me-2"></i> {{ flight.flight_number }} ({{ flight.airline_name }})
+                    </h5>
+                    <span class="text-secondary small">{{ flight.origin_code }} ➜ {{ flight.destination_code }} | {{ flight.departure_date }} ({{ flight.departure_time }} - {{ flight.arrival_time }})</span>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-primary text-uppercase px-3 py-1">{{ cabin }} Class</span>
+                    <span class="text-muted small d-block mt-1">Aircraft: {{ flight.aircraft_type }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Cabin Visualizer -->
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 text-center">
+            <h5 class="fw-bold mb-1">Aircraft Cabin Layout</h5>
+            <p class="text-muted small mb-4">Click an available seat to select your preferred place on board.</p>
+
+            <!-- Seat Status Legend -->
+            <div class="d-flex flex-wrap justify-content-center gap-3 mb-4 small">
+                <span class="d-flex align-items-center gap-1">
+                    <span class="seat-btn seat-available" style="width: 24px; height: 24px;"></span> Available
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                    <span class="seat-btn seat-premium" style="width: 24px; height: 24px;"></span> Premium/Extra Legroom
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                    <span class="seat-btn seat-selected" style="width: 24px; height: 24px;"></span> Selected
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                    <span class="seat-btn seat-booked" style="width: 24px; height: 24px;"></span> Booked / Unavailable
+                </span>
+            </div>
+
+            <!-- Airplane Fuselage Frame -->
+            <div class="bg-light p-4 rounded-4 border mx-auto" style="max-width: 480px;">
+                <!-- Cockpit Indicator -->
+                <div class="mb-4 pb-2 border-bottom">
+                    <span class="badge bg-secondary text-uppercase px-3 py-1">
+                        <i class="fa-solid fa-angles-up me-1"></i> Front of Aircraft / Cockpit
+                    </span>
+                </div>
+
+                <!-- First Class Section -->
+                <div class="mb-4">
+                    <small class="fw-bold text-muted text-uppercase d-block mb-2">First Class (Row 1)</small>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        {% for s in seats if s.cabin == 'First' %}
+                            {% if loop.index == 3 %}
+                                <div style="width: 30px;" class="small text-muted fw-bold">AISLE</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="seat-btn {% if s.is_booked %}seat-booked{% elif s.is_premium %}seat-premium{% else %}seat-available{% endif %}"
+                                    {% if s.is_booked %}disabled{% else %}onclick="selectSeat('{{ s.code }}', '{{ s.cabin }}', {{ s.surcharge }})"{% endif %}
+                                    id="seat-{{ s.code }}">
+                                {{ s.code }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Business Class Section -->
+                <div class="mb-4">
+                    <small class="fw-bold text-muted text-uppercase d-block mb-2">Business Class (Row 2)</small>
+                    <div class="d-flex justify-content-center align-items-center gap-1">
+                        {% for s in seats if s.cabin == 'Business' %}
+                            {% if loop.index == 4 %}
+                                <div style="width: 30px;" class="small text-muted fw-bold">AISLE</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="seat-btn {% if s.is_booked %}seat-booked{% elif s.is_premium %}seat-premium{% else %}seat-available{% endif %}"
+                                    {% if s.is_booked %}disabled{% else %}onclick="selectSeat('{{ s.code }}', '{{ s.cabin }}', {{ s.surcharge }})"{% endif %}
+                                    id="seat-{{ s.code }}">
+                                {{ s.code }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Economy Class Section -->
+                <div class="mb-2">
+                    <small class="fw-bold text-muted text-uppercase d-block mb-2">Economy Class (Rows 3 to 5)</small>
+                    
+                    <!-- Row 3 -->
+                    <div class="d-flex justify-content-center align-items-center gap-1 mb-2">
+                        {% for s in seats if s.cabin == 'Economy' and s.code.startswith('3') %}
+                            {% if loop.index == 4 %}
+                                <div style="width: 30px;" class="small text-muted fw-bold">AISLE</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="seat-btn {% if s.is_booked %}seat-booked{% elif s.is_premium %}seat-premium{% else %}seat-available{% endif %}"
+                                    {% if s.is_booked %}disabled{% else %}onclick="selectSeat('{{ s.code }}', '{{ s.cabin }}', {{ s.surcharge }})"{% endif %}
+                                    id="seat-{{ s.code }}">
+                                {{ s.code }}
+                            </button>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="d-flex justify-content-center align-items-center gap-1 mb-2">
+                        {% for s in seats if s.cabin == 'Economy' and s.code.startswith('4') %}
+                            {% if loop.index == 4 %}
+                                <div style="width: 30px;" class="small text-muted fw-bold">AISLE</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="seat-btn {% if s.is_booked %}seat-booked{% elif s.is_premium %}seat-premium{% else %}seat-available{% endif %}"
+                                    {% if s.is_booked %}disabled{% else %}onclick="selectSeat('{{ s.code }}', '{{ s.cabin }}', {{ s.surcharge }})"{% endif %}
+                                    id="seat-{{ s.code }}">
+                                {{ s.code }}
+                            </button>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Row 5 -->
+                    <div class="d-flex justify-content-center align-items-center gap-1">
+                        {% for s in seats if s.cabin == 'Economy' and s.code.startswith('5') %}
+                            {% if loop.index == 4 %}
+                                <div style="width: 30px;" class="small text-muted fw-bold">AISLE</div>
+                            {% endif %}
+                            <button type="button"
+                                    class="seat-btn {% if s.is_booked %}seat-booked{% elif s.is_premium %}seat-premium{% else %}seat-available{% endif %}"
+                                    {% if s.is_booked %}disabled{% else %}onclick="selectSeat('{{ s.code }}', '{{ s.cabin }}', {{ s.surcharge }})"{% endif %}
+                                    id="seat-{{ s.code }}">
+                                {{ s.code }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Summary & Proceed Form -->
+    <div class="col-lg-4">
+        <div class="card card-custom p-4 sticky-top" style="top: 85px;">
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Selected Seat Summary</h5>
+
+            <form action="{{ url_for('passenger_details') }}" method="POST">
+                <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
+                <input type="hidden" name="seat_code" id="input_seat_code" value="3B">
+                <input type="hidden" name="cabin" id="input_cabin" value="{{ cabin }}">
+
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Assigned Seat</label>
+                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 border">
+                        <div>
+                            <span class="fs-4 fw-bold text-success" id="display_seat_code">3B</span>
+                            <span class="badge bg-secondary ms-2" id="display_cabin">Economy</span>
+                        </div>
+                        <i class="fa-solid fa-circle-check text-success fa-xl"></i>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Seat Characteristic</label>
+                    <p class="small text-secondary mb-0" id="display_perks">Standard Economy Row (Window/Aisle comfort)</p>
+                </div>
+
+                <div class="border-top pt-3 mb-4">
+                    <div class="d-flex justify-content-between small text-muted mb-1">
+                        <span>Base Airfare</span>
+                        <span>₹{{ flight.base_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mb-1">
+                        <span>Seat Fee</span>
+                        <span id="display_surcharge">₹0</span>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mb-2">
+                        <span>Govt Taxes & Surcharge</span>
+                        <span>₹450</span>
+                    </div>
+                    <div class="d-flex justify-content-between fw-bold text-dark fs-5 border-top pt-2">
+                        <span>Total Payable</span>
+                        <span class="text-primary" id="display_total">₹{{ (flight.base_price + 450)|round(0)|int }}</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold shadow-sm">
+                    Enter Passenger Details <i class="fa-solid fa-arrow-right ms-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentSelectedBtn = null;
+    const basePrice = {{ flight.base_price }};
+    const taxes = 450;
+
+    function selectSeat(code, cabin, surcharge) {
+        if (currentSelectedBtn) {
+            currentSelectedBtn.classList.remove('seat-selected');
+        }
+
+        const btn = document.getElementById('seat-' + code);
+        btn.classList.add('seat-selected');
+        currentSelectedBtn = btn;
+
+        document.getElementById('input_seat_code').value = code;
+        document.getElementById('input_cabin').value = cabin;
+        document.getElementById('display_seat_code').innerText = code;
+        document.getElementById('display_cabin').innerText = cabin;
+        document.getElementById('display_surcharge').innerText = '₹' + surcharge;
+
+        let multiplier = cabin === 'First' ? 3.5 : (cabin === 'Business' ? 2.2 : 1.0);
+        let total = Math.round((basePrice * multiplier) + surcharge + taxes);
+        document.getElementById('display_total').innerText = '₹' + total;
+    }
+
+    // Default select first available seat on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaultBtn = document.getElementById('seat-3B') || document.querySelector('.seat-available');
+        if (defaultBtn) {
+            defaultBtn.click();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Passenger Information - {{ flight.flight_number }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 p-md-5">
+            <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+                <div>
+                    <h4 class="fw-bold mb-1"><i class="fa-solid fa-user-pen text-primary me-2"></i> Passenger Information</h4>
+                    <p class="text-muted small mb-0">Enter legal passenger details matching government identification.</p>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-primary fs-6 px-3 py-1">Seat {{ seat_code }}</span>
+                    <span class="d-block small text-muted mt-1">{{ cabin }} Class</span>
+                </div>
+            </div>
+
+            <form action="{{ url_for('payment_page') }}" method="POST">
+                <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
+                <input type="hidden" name="seat_code" value="{{ seat_code }}">
+                <input type="hidden" name="cabin" value="{{ cabin }}">
+                <input type="hidden" name="total_amount" value="{{ total }}">
+
+                <!-- Full Legal Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold small text-secondary">Full Legal Name *</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fa-regular fa-user text-primary"></i></span>
+                        <input type="text" name="full_name" class="form-control" required
+                               placeholder="e.g. Rahul Sharma"
+                               value="{{ user.full_name or 'Rahul Sharma' }}">
+                    </div>
+                </div>
+
+                <!-- Age and Gender -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Age *</label>
+                        <input type="number" name="age" class="form-control" min="1" max="110" required value="28">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Gender *</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Email Address (for E-Ticket) *</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-regular fa-envelope text-primary"></i></span>
+                            <input type="email" name="email" class="form-control" required
+                                   placeholder="customer@example.com"
+                                   value="{{ user.email or 'customer@aerosky.com' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Phone Number *</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-phone text-primary"></i></span>
+                            <input type="tel" name="phone" class="form-control" required
+                                   placeholder="+91 9833003300"
+                                   value="+91 9833003300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ID / Passport Number (Optional) -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-secondary">Govt ID / Passport Number (Optional for Domestic)</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fa-regular fa-id-card text-primary"></i></span>
+                        <input type="text" name="passport" class="form-control" placeholder="Aadhar / Voter ID / Passport Number" value="Z3000777">
+                    </div>
+                </div>
+
+                <!-- Pricing Summary Callout -->
+                <div class="alert alert-info d-flex justify-content-between align-items-center mb-4 rounded-3">
+                    <div>
+                        <span class="fw-bold d-block">Total Payable Amount:</span>
+                        <small class="text-muted">Includes Base Fare, Seat Surcharge & Airport Fees</small>
+                    </div>
+                    <span class="fs-4 fw-bold text-primary">₹{{ total }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-2">
+                    <a href="{{ url_for('seat_selection', flight_id=flight.flight_id, cabin=cabin) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Back to Seat Map
+                    </a>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        Proceed to Payment <i class="fa-solid fa-credit-card ms-1"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Simulated Local Payment Gateway{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom p-4 p-md-5">
+            <!-- Simulated Payment Badge -->
+            <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+                <div>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 mb-1">
+                        <i class="fa-solid fa-lock me-1"></i> Simulated Local Sandbox Gateway
+                    </span>
+                    <h4 class="fw-bold mb-0">Complete Airline Payment</h4>
+                </div>
+                <div class="text-end">
+                    <span class="fs-4 fw-bold text-primary">₹{{ total_amount }}</span>
+                    <small class="text-muted d-block">All inclusive</small>
+                </div>
+            </div>
+
+            <!-- Booking Summary Accordion -->
+            <div class="p-3 bg-light rounded-3 border mb-4 small">
+                <div class="row">
+                    <div class="col-md-6 mb-2 mb-md-0">
+                        <span class="text-muted d-block">Passenger:</span>
+                        <strong class="text-dark">{{ full_name }} ({{ age }} yrs, {{ gender }})</strong>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <span class="text-muted d-block">Flight & Seat:</span>
+                        <strong class="text-primary">{{ flight.flight_number }} | Seat {{ seat_code }} ({{ cabin }})</strong>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ url_for('confirm_booking') }}" method="POST">
+                <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
+                <input type="hidden" name="seat_code" value="{{ seat_code }}">
+                <input type="hidden" name="cabin" value="{{ cabin }}">
+                <input type="hidden" name="full_name" value="{{ full_name }}">
+                <input type="hidden" name="age" value="{{ age }}">
+                <input type="hidden" name="gender" value="{{ gender }}">
+                <input type="hidden" name="email" value="{{ email }}">
+                <input type="hidden" name="phone" value="{{ phone }}">
+                <input type="hidden" name="passport" value="{{ passport }}">
+                <input type="hidden" name="total_amount" value="{{ total_amount }}">
+
+                <h6 class="fw-bold mb-3">Choose Simulated Payment Instrument:</h6>
+
+                <!-- Payment Tabs -->
+                <ul class="nav nav-pills mb-4 nav-justified" id="paymentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold" id="upi-tab" data-bs-toggle="pill" data-bs-target="#upi-pane" type="button" onclick="setMethod('UPI')">
+                            <i class="fa-solid fa-mobile-screen-button me-2"></i> Instant UPI
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="card-tab" data-bs-toggle="pill" data-bs-target="#card-pane" type="button" onclick="setMethod('Credit/Debit Card')">
+                            <i class="fa-solid fa-credit-card me-2"></i> Credit / Debit Card
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="wallet-tab" data-bs-toggle="pill" data-bs-target="#wallet-pane" type="button" onclick="setMethod('Airline Wallet')">
+                            <i class="fa-solid fa-wallet me-2"></i> Digital Wallet
+                        </button>
+                    </li>
+                </ul>
+
+                <input type="hidden" name="payment_method" id="selected_payment_method" value="UPI">
+
+                <div class="tab-content mb-4" id="paymentTabsContent">
+                    <!-- UPI Pane -->
+                    <div class="tab-pane fade show active p-4 bg-light rounded-3 border" id="upi-pane">
+                        <label class="form-label fw-bold small text-secondary">Virtual Payment Address (VPA / UPI ID)</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-at text-primary"></i></span>
+                            <input type="text" class="form-control" value="passenger@okaxis" placeholder="username@upi">
+                        </div>
+                        <small class="text-muted"><i class="fa-solid fa-circle-check text-success me-1"></i> Simulated UPI authorization with local test bank.</small>
+                    </div>
+
+                    <!-- Card Pane -->
+                    <div class="tab-pane fade p-4 bg-light rounded-3 border" id="card-pane">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-secondary">Card Number</label>
+                            <input type="text" class="form-control font-monospace" value="4532 •••• •••• 8821">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label fw-bold small text-secondary">Expiry (MM/YY)</label>
+                                <input type="text" class="form-control" value="12/28">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold small text-secondary">CVV</label>
+                                <input type="password" class="form-control" value="789" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wallet Pane -->
+                    <div class="tab-pane fade p-4 bg-light rounded-3 border" id="wallet-pane">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="fw-bold mb-0">AeroSky Miles & Cash Wallet</h6>
+                                <small class="text-muted">Available Balance: ₹25,000</small>
+                            </div>
+                            <span class="badge bg-success">Sufficient Balance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Evaluation Simulation Control -->
+                <div class="p-3 bg-warning bg-opacity-10 border border-warning rounded-3 mb-4">
+                    <label class="form-label fw-bold small text-dark mb-1">
+                        <i class="fa-solid fa-flask-vial text-warning me-1"></i> Academic Demonstration Control:
+                    </label>
+                    <div class="d-flex gap-4 small mt-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="simulate_outcome" id="sim_success" value="SUCCESS" checked>
+                            <label class="form-check-label fw-bold text-success" for="sim_success">
+                                Simulate Payment Successful (Generates PNR & E-Ticket)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="simulate_outcome" id="sim_fail" value="FAILED">
+                            <label class="form-check-label fw-bold text-danger" for="sim_fail">
+                                Simulate Payment Failed (Error handling verification)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                    <button type="submit" class="btn btn-success rounded-pill px-5 py-2 fw-bold shadow">
+                        <i class="fa-solid fa-shield-check me-2"></i> Pay ₹{{ total_amount }} & Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function setMethod(method) {
+        document.getElementById('selected_payment_method').value = method;
+    }
+</script>
+{% endblock %}

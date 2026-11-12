@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Electronic Ticket - PNR: {{ ticket.pnr }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <!-- Top Action Buttons -->
+        <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+            <a href="{{ url_for('my_bookings') }}" class="btn btn-outline-secondary rounded-pill btn-sm">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to My Bookings
+            </a>
+            <div class="d-flex gap-2">
+                <button onclick="window.print()" class="btn btn-outline-primary rounded-pill btn-sm fw-bold">
+                    <i class="fa-solid fa-print me-1"></i> Print Ticket
+                </button>
+                <a href="{{ url_for('download_ticket_pdf', pnr=ticket.pnr) }}" class="btn btn-primary rounded-pill btn-sm fw-bold">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Download PDF Ticket
+                </a>
+            </div>
+        </div>
+
+        <!-- E-Ticket Card -->
+        <div class="card card-custom overflow-hidden shadow-lg border-0" id="printable-area">
+            <!-- Header Header -->
+            <div class="bg-dark text-white p-4 d-flex justify-content-between align-items-center" style="background-color: #0f172a !important;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-primary rounded-3 text-white">
+                        <i class="fa-solid fa-plane-departure fa-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">AeroSky Commercial Airlines</h4>
+                        <small class="text-light opacity-75">Electronic Passenger Ticket & Itinerary Receipt</small>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <span class="text-light opacity-75 small d-block">Booking Reference (PNR)</span>
+                    <span class="fs-4 fw-bold font-monospace text-warning">{{ ticket.pnr }}</span>
+                </div>
+            </div>
+
+            <div class="p-4 p-md-5">
+                <!-- Flight Overview Row -->
+                <div class="row align-items-center mb-4 pb-4 border-bottom">
+                    <div class="col-md-4">
+                        <span class="text-muted small text-uppercase fw-bold d-block">Flight Information</span>
+                        <h5 class="fw-bold text-dark mb-0">{{ ticket.flight_number }}</h5>
+                        <small class="text-secondary">{{ ticket.airline_name }}</small>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="fw-bold mb-0 text-primary">{{ ticket.origin_code }}</h3>
+                                <small class="text-muted">{{ ticket.origin_city }}</small>
+                            </div>
+                            <div class="px-3">
+                                <small class="text-muted fw-bold d-block">{{ ticket.travel_date }}</small>
+                                <i class="fa-solid fa-arrow-right-long text-primary fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-0 text-primary">{{ ticket.destination_code }}</h3>
+                                <small class="text-muted">{{ ticket.destination_city }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-md-end">
+                        <span class="badge {% if ticket.booking_status == 'CONFIRMED' %}bg-success{% elif ticket.booking_status == 'CHECKED_IN' %}bg-primary{% else %}bg-danger{% endif %} px-3 py-2 text-uppercase fw-bold">
+                            {{ ticket.booking_status }}
+                        </span>
+                        <small class="text-muted d-block mt-1">Terminal: {{ ticket.terminal }} | Gate: {{ ticket.gate }}</small>
+                    </div>
+                </div>
+
+                <!-- Passenger Details & QR Code Row -->
+                <div class="row g-4 align-items-center mb-4 pb-4 border-bottom">
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Passenger Name:</span>
+                                <strong class="text-dark fs-6">{{ ticket.passenger_name }}</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Assigned Seat:</span>
+                                <strong class="text-primary fs-5">{{ ticket.seat_code }}</strong> ({{ ticket.cabin_class }} Class)
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Contact Email:</span>
+                                <span class="text-dark small">{{ ticket.passenger_email }}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Contact Phone:</span>
+                                <span class="text-dark small">{{ ticket.passenger_phone }}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Departure / Arrival Time:</span>
+                                <span class="text-dark fw-bold">{{ ticket.departure_time }} ➜ {{ ticket.arrival_time }}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted small d-block">Fare Paid:</span>
+                                <strong class="text-success fs-6">INR {{ ticket.total_amount }}</strong> (via {{ ticket.payment_method }})
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Local QR Code -->
+                    <div class="col-md-4 text-center">
+                        <div class="p-3 bg-light border rounded-3 d-inline-block">
+                            <img src="data:image/png;base64,{{ qr_image }}" alt="Local QR Code" class="img-fluid" style="width: 140px; height: 140px;">
+                            <span class="d-block text-muted mt-1" style="font-size: 0.65rem;">Scan at Airport Security</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Baggage & Airport Notice -->
+                <div class="row g-3 small text-secondary">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <strong class="text-dark d-block mb-1"><i class="fa-solid fa-suitcase-rolling me-1 text-primary"></i> Baggage Allowance</strong>
+                            Check-in: 15 kg (1 piece)<br>
+                            Cabin bag: 7 kg (Laptop/Handbag)
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <strong class="text-dark d-block mb-1"><i class="fa-solid fa-clock me-1 text-primary"></i> Airport Reporting</strong>
+                            Counters close 60 mins before departure. Boarding gates close 25 mins prior.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border h-100">
+                            <strong class="text-dark d-block mb-1"><i class="fa-solid fa-id-card me-1 text-primary"></i> Mandatory ID</strong>
+                            Please present valid government photo identification during security check.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Strip -->
+            <div class="bg-light p-3 border-top text-center text-muted small">
+                Generated locally by AeroSky Airline Reservation and Ticket Booking System &bull; MCA Major Project
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

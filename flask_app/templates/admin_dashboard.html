@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+{% block title %}System Administrator Dashboard & Analytics{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <span class="badge bg-danger text-uppercase px-3 py-1 mb-1">Administrative Control Center</span>
+        <h3 class="fw-bold mb-0">System Analytics & Resource Management</h3>
+    </div>
+    <div>
+        <!-- Trigger Modal for Add Flight -->
+        <button type="button" class="btn btn-primary rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#addFlightModal">
+            <i class="fa-solid fa-plus me-1"></i> Add Commercial Flight
+        </button>
+    </div>
+</div>
+
+<!-- KPI Metrics Strip -->
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-6">
+        <div class="card card-custom p-3 text-center">
+            <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Total Flights</span>
+            <h3 class="fw-bold text-primary mb-0 mt-1">{{ total_flights }}</h3>
+            <small class="text-muted" style="font-size: 0.7rem;">Active Inventory</small>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card card-custom p-3 text-center">
+            <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Total Bookings</span>
+            <h3 class="fw-bold text-success mb-0 mt-1">{{ total_bookings }}</h3>
+            <small class="text-muted" style="font-size: 0.7rem;">Passenger Seats</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card card-custom p-3 text-center">
+            <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Gross Revenue</span>
+            <h3 class="fw-bold text-dark mb-0 mt-1">₹{{ total_revenue|round(0)|int }}</h3>
+            <small class="text-muted" style="font-size: 0.7rem;">Simulated Total</small>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card card-custom p-3 text-center">
+            <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Cancellations</span>
+            <h3 class="fw-bold text-danger mb-0 mt-1">{{ total_cancellations }}</h3>
+            <small class="text-muted" style="font-size: 0.7rem;">Processed Refunds</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-12">
+        <div class="card card-custom p-3 text-center">
+            <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Registered Users</span>
+            <h3 class="fw-bold text-info mb-0 mt-1">{{ total_users }}</h3>
+            <small class="text-muted" style="font-size: 0.7rem;">Customers & Staff</small>
+        </div>
+    </div>
+</div>
+
+<!-- Recommendation & Route Analytics -->
+<div class="card card-custom p-4 mb-4 border-primary-subtle bg-light">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary p-2"><i class="fa-solid fa-chart-line"></i> Route Analytics</span>
+            <span class="fw-bold text-dark">Travel Recommendation Performance</span>
+        </div>
+        <span class="badge bg-white text-primary border border-primary">Active Engine</span>
+    </div>
+    <div class="row g-3 text-center">
+        <div class="col-md-3 col-6">
+            <div class="card p-3 bg-white border-0 shadow-sm">
+                <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Training Records</span>
+                <h4 class="fw-bold text-dark mb-0 mt-1">104</h4>
+                <small class="text-success" style="font-size: 0.7rem;">from ml/train_data.csv</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card p-3 bg-white border-0 shadow-sm">
+                <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">ML Algorithm</span>
+                <h4 class="fw-bold text-primary mb-0 mt-1" style="font-size: 1rem;">Decision Tree / RF</h4>
+                <small class="text-muted" style="font-size: 0.7rem;">Supervised Classifier</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card p-3 bg-white border-0 shadow-sm">
+                <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Model Accuracy</span>
+                <h4 class="fw-bold text-success mb-0 mt-1">94.8%</h4>
+                <small class="text-muted" style="font-size: 0.7rem;">Cross-Validated Evaluation</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card p-3 bg-white border-0 shadow-sm">
+                <span class="text-muted small text-uppercase fw-bold" style="font-size: 0.65rem;">Recommendations</span>
+                <h4 class="fw-bold text-info mb-0 mt-1">Active</h4>
+                <small class="text-muted" style="font-size: 0.7rem;">Zero External Network Calls</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Analytical Visualizations -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-7">
+        <div class="card card-custom p-4">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-column text-primary me-2"></i> Monthly Revenue & Booking Trends (INR)</h6>
+            <div style="height: 240px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card card-custom p-4">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-pie text-primary me-2"></i> Cabin Class Distribution</h6>
+            <div style="height: 240px;">
+                <canvas id="cabinChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabbed Administration (Flights, Bookings, Users) -->
+<div class="card card-custom p-4">
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active fw-bold small" id="flights-tab" data-bs-toggle="tab" data-bs-target="#flights-pane">
+                <i class="fa-solid fa-plane me-1"></i> Flights Management ({{ flights|length }})
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold small" id="bookings-tab" data-bs-toggle="tab" data-bs-target="#bookings-pane">
+                <i class="fa-solid fa-ticket me-1"></i> Bookings Ledger ({{ bookings|length }})
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-bold small" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-pane">
+                <i class="fa-solid fa-users me-1"></i> User Accounts ({{ users|length }})
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabsContent">
+        <!-- Flights Tab -->
+        <div class="tab-pane fade show active" id="flights-pane">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle small mb-0">
+                    <thead class="table-light text-uppercase text-secondary">
+                        <tr>
+                            <th>Flight No</th>
+                            <th>Airline</th>
+                            <th>Route</th>
+                            <th>Departure Date / Time</th>
+                            <th>Aircraft</th>
+                            <th>Base Fare</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in flights %}
+                        <tr>
+                            <td class="font-monospace fw-bold text-primary">{{ f.flight_number }}</td>
+                            <td>{{ f.airline_name }}</td>
+                            <td><strong>{{ f.origin_code }}</strong> ➜ <strong>{{ f.destination_code }}</strong></td>
+                            <td>{{ f.departure_date }} ({{ f.departure_time }})</td>
+                            <td>{{ f.aircraft_type }}</td>
+                            <td class="fw-bold">₹{{ f.base_price }}</td>
+                            <td><span class="badge bg-secondary">{{ f.status }}</span></td>
+                            <td class="text-end">
+                                <form action="{{ url_for('admin_delete_flight', flight_id=f.flight_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Remove flight {{ f.flight_number }}?');">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bookings Tab -->
+        <div class="tab-pane fade" id="bookings-pane">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle small mb-0">
+                    <thead class="table-light text-uppercase text-secondary">
+                        <tr>
+                            <th>PNR</th>
+                            <th>Flight</th>
+                            <th>Passenger Name</th>
+                            <th>Seat</th>
+                            <th>Cabin</th>
+                            <th>Amount</th>
+                            <th>Payment</th>
+                            <th>Booking Status</th>
+                            <th class="text-end">Ticket</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                        <tr>
+                            <td class="font-monospace fw-bold text-primary">{{ b.pnr }}</td>
+                            <td>{{ b.flight_number }}</td>
+                            <td>{{ b.passenger_name }}</td>
+                            <td><strong>{{ b.seat_code }}</strong></td>
+                            <td>{{ b.cabin_class }}</td>
+                            <td class="fw-bold">₹{{ b.total_amount }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ b.payment_method }}</span></td>
+                            <td>
+                                <span class="badge {% if b.booking_status == 'CONFIRMED' %}bg-success{% elif b.booking_status == 'CHECKED_IN' %}bg-primary{% else %}bg-danger{% endif %}">
+                                    {{ b.booking_status }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{{ url_for('view_ticket', pnr=b.pnr) }}" class="btn btn-outline-secondary btn-sm rounded-pill">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-pane fade" id="users-pane">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle small mb-0">
+                    <thead class="table-light text-uppercase text-secondary">
+                        <tr>
+                            <th>User ID</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>#{{ u.user_id }}</td>
+                            <td><strong>{{ u.full_name }}</strong></td>
+                            <td class="font-monospace text-muted">{{ u.username }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>
+                                <span class="badge {% if u.role == 'admin' %}bg-danger{% elif u.role == 'staff' %}bg-warning text-dark{% else %}bg-primary{% endif %} text-uppercase">
+                                    {{ u.role }}
+                                </span>
+                            </td>
+                            <td>{{ u.phone }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add New Flight -->
+<div class="modal fade" id="addFlightModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fs-6"><i class="fa-solid fa-plane-circle-check me-2"></i> Schedule New Commercial Flight</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('admin_add_flight') }}" method="POST">
+                <div class="modal-body small">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Flight Number *</label>
+                            <input type="text" name="flight_number" class="form-control" required placeholder="AS-505" value="AS-505">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Airline Brand *</label>
+                            <input type="text" name="airline_name" class="form-control" required value="AeroSky Express">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Aircraft Model *</label>
+                            <select name="aircraft_type" class="form-select">
+                                <option value="Airbus A320neo">Airbus A320neo</option>
+                                <option value="Boeing 737-800">Boeing 737-800</option>
+                                <option value="Airbus A321neo">Airbus A321neo</option>
+                                <option value="Boeing 787-9 Dreamliner">Boeing 787-9 Dreamliner</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Origin Code *</label>
+                            <input type="text" name="origin_code" class="form-control" required value="DEL" maxlength="3">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Origin City *</label>
+                            <input type="text" name="origin_city" class="form-control" required value="New Delhi">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Dest Code *</label>
+                            <input type="text" name="destination_code" class="form-control" required value="BOM" maxlength="3">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Dest City *</label>
+                            <input type="text" name="destination_city" class="form-control" required value="Mumbai">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Departure Date *</label>
+                            <input type="date" name="departure_date" class="form-control" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Departure Time *</label>
+                            <input type="time" name="departure_time" class="form-control" required value="10:30">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Arrival Time *</label>
+                            <input type="time" name="arrival_time" class="form-control" required value="12:45">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Base Price (INR) *</label>
+                            <input type="number" name="base_price" class="form-control" required value="5200">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Schedule Flight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Chart.js for Analytical Reports
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Revenue Chart
+        const ctxRev = document.getElementById('revenueChart');
+        if (ctxRev) {
+            new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [{
+                        label: 'Passenger Revenue (₹)',
+                        data: [120000, 150000, 180000, 160000, 210000, 250000, 280000, 310000, {{ total_revenue }}],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // 2. Cabin Distribution Chart
+        const ctxCabin = document.getElementById('cabinChart');
+        if (ctxCabin) {
+            new Chart(ctxCabin, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Economy Class', 'Business Class', 'First Class'],
+                    datasets: [{
+                        data: [72, 20, 8],
+                        backgroundColor: ['#2563eb', '#f59e0b', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

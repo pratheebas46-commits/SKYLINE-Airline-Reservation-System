@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Passenger Registration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card card-custom p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex mb-2">
+                    <i class="fa-solid fa-user-plus fa-2xl"></i>
+                </div>
+                <h4 class="fw-bold mb-1">Create Passenger Profile</h4>
+                <p class="text-muted small">Register to save bookings, download e-tickets, and access web check-in.</p>
+            </div>
+
+            <form action="{{ url_for('register') }}" method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Username *</label>
+                        <input type="text" name="username" class="form-control" required placeholder="priya_sharma">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Full Legal Name *</label>
+                        <input type="text" name="full_name" class="form-control" required placeholder="Priya Sharma">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Email Address *</label>
+                        <input type="email" name="email" class="form-control" required placeholder="priya@example.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Phone Number *</label>
+                        <input type="tel" name="phone" class="form-control" required placeholder="+91 9876543210">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Passport / Govt ID</label>
+                        <input type="text" name="passport" class="form-control" placeholder="A1234567">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-secondary">Password *</label>
+                        <input type="password" name="password" class="form-control" required placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-secondary">User Role</label>
+                    <select name="role" class="form-select">
+                        <option value="customer" selected>Customer / Passenger</option>
+                        <option value="staff">Airline Ground Staff</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-pill fw-bold shadow-sm mb-3">
+                    Complete Registration
+                </button>
+            </form>
+
+            <div class="text-center small">
+                <span class="text-muted">Already registered?</span>
+                <a href="{{ url_for('login') }}" class="fw-bold text-primary text-decoration-none">Sign In here</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
