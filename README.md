@@ -1,5 +1,4 @@
-# Domestic Railway Reservation System
-### Academic MCA Major Project - Fully Offline Local Architecture
+# Domestic Railway Reservation System with using Ethereum Blockchain Integration 
 
 A comprehensive, production-grade Domestic Railway Reservation System featuring:
 - **Frontend**: React 19 + TypeScript + Tailwind CSS (IRCTC-style booking flow: train search, class selection, interactive coach seat map, passenger form, local simulated payments, instant ticket generation, web check-in, dashboard).
@@ -213,7 +212,7 @@ The booking confirmation page includes an optional blockchain panel. After a boo
 
 ### Deploy
 
-1. Start Ganache with an RPC endpoint of `http://127.0.0.1:7545` and note the chain ID shown by your Ganache workspace. The default configuration expects chain ID `5777`.
+1. Start Ganache with an RPC endpoint of `http://127.0.0.1:7545` and note the chain ID shown by your Ganache workspace. The default configuration expects chain ID `5777`.or `1337`
 2. In the project root, run `npm install`.
 3. Compile the contract with `npm run blockchain:compile`.
 4. Deploy with `npm run blockchain:deploy`.
